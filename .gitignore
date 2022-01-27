@@ -6,3 +6,6 @@
 /BookStoreApp/.vs/BookStoreApp/v16
 /BookStoreApp/obj
 /BookStoreApp/bin/Debug/netcoreapp3.1
+/BookStoreApp/bin/Release/netcoreapp3.1
+/BookStoreApp/wwwroot/lib
+/BookStoreApp/.vs/BookStoreApp/DesignTimeBuild

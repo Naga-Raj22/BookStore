@@ -1,0 +1,376 @@
+- DotNet Core is an open source and cross platform framework which is used for developing several types of applications.
+
+- Types of applications using Dotnet core
+Web
+- Asp.net MVC core
+- Web API
+- Razor Pages
+- Microservices
+
+- Mobile
+- Console
+- Desktop
+-IOT (Internet of things)
+- ML(Machine Learning)
+- Gaming
+- Cloud
+
+Dotnet core Features
+-Open Source (available on GitHub https://github.com/dotnet )
+-cross platform
+- CLI support
+- supported by microsoft
+
+
+package management
+- Nuget 
+
+creating dotnet project from CLI
+
+- Dotnet new --list
+	- it will display the list of application templates
+- Dotnet new mvc --name firstMVCApp
+	- it will create web mvc application with the name
+- Dotnet run
+	- it will run the application
+
+- MVC is an architectural design pattern. It means this design pattern is used at the architecture level of an appliation.
+
+- Model, View & controller are the main components of the MVC pattern
+
+- model is responsible for data
+- View is responsible for UI (user interface)
+- Controller is responsible for flow of application by accepting user input.
+
+-A model in asp.net core mvc is a simple class which has some properties.
+
+- model is used to pass data from cntrler to view and view to contrler
+- Model is also used for server side validation. and with some technieues we can generate client side validation also
+- It is not mandatory that each action method will return some model.
+
+- A view is the combination of html and c#(or F#, vb)
+- hence for c# app the extension of a vies is .cshtml
+whatever you see on your browser is a view.
+- it is not mandatory that each action method will return a view.
+- when a view (containing C#) gets rendered on browser then all its C# is converted into html. it means on a browser we will only see html and data.
+
+
+Benefits of MVC
+================
+- separation of concern
+- each component has a specific job hence it is easy to debug the code.
+
+
+- By default every web application is a console application in dotnet core
+-> steps to convert console app into Web app
+- update SDK is csproj file
+- update output type in csproj
+- add new webhostbuilder
+- add routing
+- setup default route
+
+=>steps
+- right click on project files-> edit project file
+- update below tab
+	- <Project Sdk="Microsoft.Net.Sdk"> 
+       to <Project Sdk="Microsoft.Net.Sdk.Web">
+- remove OutputType tag
+	- <outputTupe>Exe</OutputType>
+
+
+=>What is a Host(HostBuilder)?
+- A Host is an object that encapsulates the resources of an appliation. 
+for ex:
+- Dependency Injection
+- Logging
+- Configuration
+- IHostedService implementation
+
+- In asp.net 5 we need third party tool to use DI but in .net core everything is inbuild.
+- this is bcoz of the hostbuilder
+
+- Progam.cs files contains the main method, Main method is the starting point of dotnet applications.
+- Startup.cs file is a middleware file,
+
+In Program.cs file
+
+namespace Practice2
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
+}
+
+
+In Startup.cs file
+
+namespace Practice2
+{
+    public class Startup
+    {
+
+//All the services which are used in the application will be defined here
+	 public void ConfigureServices(IServiceCollection services)
+        {
+
+	}
+
+// configure method is used as middleware into the app.
+// middleware - everything which is used in the http call, for the application, that will be written over here
+
+	 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+	    // enables routing
+ 	    app.UseRouting(); 
+
+	   //default route for the application
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapGet("/", async context => 
+		{
+			await context.Response.WriteAsync("Hello World!");
+
+		});
+            });
+        }
+    }
+}
+
+
+
+DNC MVC App pipeline
+- Asp.net core create an http appp pipeline that processes the request.
+- http app pipeline is responsible to handle all the request and response for the app.
+- the http pipeline is configures in "Configure" method of startup.cs
+- An middleware is a piece of code(software component) which is used in http pipeline.
+- In an app, we use multiple middleware
+- Middleware has access to all the request and responses.
+- middleware are used to add several features to the app.
+- we can use logging, authorization etc in middleware.
+- 3 methods used in middleware
+- Use(), Next(), Map()
+- Use method used to add new middleware features
+- Next method will take control to the another meddleware method.
+- Map method will route the incoming request.
+
+
+=> launchSettings.json
+-launchSettings.json file located under Properties folder.
+- it has environmental variable value, port and other launch related parameters.
+
+Controller
+==========
+- A controller will group Action methods.
+- A controller will handle an incoming HTTP request
+- The mapping of Http request is done using Routing.
+- Caching, authentication, authorization, etc,. features can be applied on controller and action methods
+- Controller classes must inherit from Controller
+	- BookController : Controller
+
+Model
+=====
+- We generally have C# properties (for each field of data) in on model class.
+- A model is responsible for data
+
+Views
+=====
+- Razor ViewEngine is responsible for View Discovery
+- when we return a view from action method then view discovery take place.
+- The view discovery determines which view file will be used for the action method.
+- By default the application will view at following location:
+	- Views/[ControllerName]/[ViewName].cshtml
+	- Views/Shared//[ViewName].cshtml
+- We can use View() method to return a view file from action method.
+- If the name of view is same as the name of action method. 
+	- return View();
+- If the name is view is not same as the name of action method.
+	- return View("viewName");
+- passing model object to the view.
+	- return View(modelObj);
+	- return View("ViewName", modelObj);
+- calling view in different location.
+	- return view("tempView/NagaTemp.cshtml");
+	- can use ~ (tild) sign for relative path 
+	eg: return view("~/tempView/Nagatemp.cshtml");
+	- can use return view("../../tempView/Nagatemp");
+
+ViewEngine
+===========
+- ViewEngine is a piece of code which is used to render server side code into view.
+- A ViewEngine works with Views.
+- Views engine is used to set/get the default path location for view, shared folder etc.
+- Razor is a viewEngine
+- Razor is used to write C# Logics on view page
+- we can use any viewengine to convert the code on view page, Razor is popular.
+Razor Syntax
+- Everything starts with @
+- When we write server side code, we will start it with @.
+
+
+_viewstart.cshtml
+===================
+- add new item - "razor view start"
+- _viewstart is the first view that executes
+- _viewstart file contains the common code for all view, like _layout views
+- we can overwrite the common view property, i.e., property in viewstart in any individual view depending on the requirement.
+- we can have main _viewstart under Views folder, and also we can have _viewstart under sub folders which will applicable to that folder only.
+
+_ViewImports.cshtml
+======================
+- It is used to imports all the common directives which will be used in views.
+- It contains all the common directives which will be used in the application.
+- Viewimports file scope is for the current folder and to all the sub folders
+- If we need to override any setting then we can create multiple _viewimports file
+
+ViewBag
+=======
+- ViewBag is used to pass data from action method to view and we can display this data on view.
+- This type of data binding is known as loosely binding.
+- we can pass any type of data in ViewBag.
+- ViewBag use dynamic property
+- we can pass data using ViewBag without or with model.
+- The scope of ViewBag is to current action method to view.
+- First we need to create a new property in ViewBag and then assign some data to it.
+	Syntax: ViewBag.PropertyName = Data; 
+- Since ViewBag is a server side code hence to use it on view, we need to use razor syntax i.e. @
+	Syntax: @ViewBag.Property
+- Data assigning to ViewBag is done in Controller's action method.
+- We can use n number of ViewBag on a single view.
+- In case we need to send multiple data on a view then viewBag is the easiest option.
+- ViewBag works on dynamic type hence it does not give complie time error.
+
+
+ViewData
+=========
+- ViewData is same as ViewBag, used to pass data from action method to View.
+- ViewData can also be used to pass data from view to its layout view.
+- ViewData's data binding is also loosely binding.
+- ViewData use ViewDataDictionary.
+- ViewData works in Key, Value style
+- ViewData["PropertyName"] = Data;
+- When we send object in ViewData, it needs to be casted to its data type before using it.
+
+Ex1:
+Controller
+	ViewData["Property1"] = "Naga";
+View
+	<div> Name = @ViewData["Property1"] </div>
+Ex2:
+Controller
+	ViewData["Book"] = new BookModel() {Author="Naga", Id=1};
+View
+@{
+	var bookInfo = ViewData["Book"] as BookModel;
+}
+<div> Name = bookInfo.Id </div>
+<div> Author = bookInfo.Author </div>
+
+Ex3:
+Index View
+@{
+	ViewData["Title"]  = "Home";
+}
+
+_Layout View
+<title> @ViewData["Title"] | Book Store Application</title>
+
+
+ViewData Attribute
+===================
+- Function is between viewdata and viewdata attribute is same but use is different
+- Attributes are used above a property, a method, or a class.
+
+ex1:
+Controller
+
+[ViewData]
+public string CustomProperty {get; set;}
+
+Public ViewResult Index()
+{
+	CustomProperty = "Custom Value";
+}
+
+View
+
+<h2> Value = @ViewData["CustomProperty"] <\h2>
+
+
+Dynamic Views
+==============
+- Display model data without @model
+
+
+Entity Framework Core
+========================
+- EF Core is used to interact with relational database.
+- EF works on O/RM (Object-Relational mapper)
+- Open source
+- lightweight, (no edmx file)
+- extensible - many packages compatable
+- Support Async
+
+
+O/RM - it is a tool used to manage database data from an object-oriented perspective.
+- All the tables converted into classes,  tables => classes
+- All the columns converted to properties, Columns => Properties
+Advs
+- since we have everything in classes, we will get intellisense which is very useful while with coding and queries
+- To generate database tables, we can use code first or database first approach
+
+How EF core work
+==============
+- EF core works with the help of model
+- A model is made up of entity classes and a context object.
+- entity also uses DB context class
+
+Packages
+========
+- Microsoft.EntityFrameworkCore
+- Microsoft.EntityFrameworkCore.Relational
+- Microsoft.EntityFrameworkCore.SqlServer
+- Microsoft.EntityFrameworkCore.Tools
+
+
+Dependency Injection
+======================
+- DI is the technique to achieve IOC (Inversion of control(Loosely coupling))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
